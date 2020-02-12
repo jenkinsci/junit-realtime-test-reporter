@@ -69,7 +69,7 @@ public class RealtimeTestResultAction extends AbstractRealtimeTestResultAction {
     @Override
     protected TestResult parse() throws IOException, InterruptedException {
         final JUnitResultArchiver archiver = getArchiver(this.owner);
-        return new JUnitParser(archiver.isKeepLongStdio(), /* TODO really?! */false).parse(getGlob(archiver), this.owner, null, null);
+        return new JUnitParser(archiver.isKeepLongStdio(), true).parse(getGlob(archiver), this.owner, null, null);
     }
 
     private String getGlob(final JUnitResultArchiver archiver) {
@@ -101,6 +101,11 @@ public class RealtimeTestResultAction extends AbstractRealtimeTestResultAction {
 
     private static AbstractProject<?, ?> getProject(AbstractBuild<?, ?> build) {
         return build.getRootBuild().getParent();
+    }
+
+    @Override
+    protected TestResult findPreviousTestResult() throws IOException, InterruptedException {
+        return findPreviousTestResult(run);
     }
 
     /*package*/ static void detachFrom(final AbstractBuild<?, ?> build) {
